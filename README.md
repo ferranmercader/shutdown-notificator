@@ -8,56 +8,54 @@ Una solución robusta y de ultra-bajo consumo para monitorizar cortes de energí
 
 ---
 
-## 🚀 Características Principales
+## 🚀 Funcionamiento
 
-- **Notificación de Apagado (Shutdown):** Detecta instantáneamente el corte de energía y envía un webhook antes de que el condensador/batería se agote.
-- **Heartbeat (Healthchecks.io):** Envía señales periódicas para asegurar que el dispositivo está online.
-- **Ultra-Bajo Consumo:** 
-  - Uso agresivo de **Deep Sleep** (consumo <10µA en espera).
-  - **IP Estática** para conexiones WiFi ultra-rápidas (<2 segundos).
-  - Gestión inteligente de Serial para ahorrar cada microamperio.
-- **Doble Versión:** 
-  - `MVP`: Simple y fácil de entender.
-  - `Deep Sleep`: Optimizada para batería.
+Este proyecto utiliza un sistema de **Heartbeat (Latido)**. El ESP32 envía una señal periódica a Healthchecks.io:
+
+1. **Monitorización Pasiva:** Healthchecks.io espera recibir un "ping" cada X tiempo.
+2. **Detección de Fallo:** Si el ESP32 se apaga (por un corte de luz) y deja de enviar la señal, Healthchecks.io detecta la ausencia del latido.
+3. **Notificación:** Al superar el tiempo de gracia, Healthchecks.io envía una alerta automática a tu **Telegram, Email, Slack**, etc.
 
 ## 🛠️ Estructura del Proyecto
 
+El proyecto se compone de snippets listos para usar en el **Arduino IDE**:
+
 ```text
-├── src/main.cpp                 # Lógica principal (PlatformIO)
-├── include/config.h             # Configuración centralizada
-├── healthcheck_deep_sleep.ino   # Snippet optimizado (Arduino IDE)
-├── healthcheck_mvp.ino          # Snippet básico (Arduino IDE)
-└── platformio.ini               # Configuración de compilación
+├── healthcheck_deep_sleep.ino   # Versión optimizada para batería (Deep Sleep)
+├── healthcheck_mvp.ino          # Versión básica (Siempre encendido)
+├── LICENSE                      # Licencia MIT
+└── README.md                    # Documentación
 ```
 
-## 🔌 Conexión de Hardware (Power Sense)
+## 🔋 Características de Consumo
 
-Para que el ESP32 detecte el corte de luz, se recomienda conectar el pin de monitorización a la fuente de alimentación mediante un divisor de tensión:
-
-1. Conecta la fuente de 5V al pin `POWER_SENSE_PIN` (por defecto GPIO 33).
-2. Usa una resistencia de **10kΩ + 20kΩ** para bajar los 5V a **3.3V** (voltaje seguro para ESP32).
-3. El programa detectará cuando este pin pase de `HIGH` a `LOW` y enviará la notificación de emergencia.
+- **Ultra-Bajo Consumo:** 
+  - Uso agresivo de **Deep Sleep** (consumo <10µA en espera).
+  - **IP Estática** para conexiones WiFi ultra-rápidas (<2 segundos).
+  - Gestión inteligente de Serial para ahorrar energía.
+- **Doble Versión:** 
+  - `MVP`: Fácil de probar y siempre online.
+  - `Deep Sleep`: Optimizada para larga duración con baterías.
 
 ## ⚙️ Configuración Rápida
 
-Edita `include/config.h` o las variables de configuración en los archivos `.ino`:
+Edita las variables al inicio de los archivos `.ino`:
 
 ```cpp
-#define WIFI_SSID "TU_WIFI"
-#define WIFI_PASSWORD "TU_PASSWORD"
-#define HEALTHCHECKS_PING_URL "https://hc-ping.com/TU-UUID"
+const char* ssid = "TU_WIFI";
+const char* password = "TU_PASSWORD";
+const char* hc_url = "https://hc-ping.com/TU-UUID";
 ```
 
 > [!TIP]
-> **Optimización de IP:** Configura la IP estática fuera del rango DHCP de tu router para evitar conflictos y asegurar una conexión instantánea.
+> **Optimización de IP:** Configura una IP estática en el código para asegurar una conexión casi instantánea y ahorrar batería en cada ciclo.
 
-## 📦 Uso con Healthchecks.io
+## 📦 Configuración en Healthchecks.io
 
-Este proyecto está diseñado para funcionar perfectamente con [Healthchecks.io](https://healthchecks.io). 
-1. Crea un nuevo Check en el panel.
-2. Copia la URL de Ping.
-3. Pégala en el código.
-4. Si el ESP32 deja de enviar la señal (por corte de luz prolongado o fallo de hardware), recibirás una alerta por Email, Telegram, Slack, etc.
+1. Crea un nuevo Check en tu panel de [Healthchecks.io](https://healthchecks.io).
+2. Configura el **Periodo** (ej. 1 minuto) y el **Tiempo de Gracia**.
+3. Configura tus canales de notificación (ej. Telegram bot).
+4. Copia la URL de Ping y pégala en tu código ESP32.
 
 ---
 

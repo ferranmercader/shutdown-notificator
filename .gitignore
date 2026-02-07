@@ -1,0 +1,16 @@
+# Build artifacts
+.pio/
+.vscode/
+
+# IDE files
+*.sublime-project
+*.sublime-workspace
+
+# Arduino temporary files
+build/
+libraries/
+
+# Secrets (Prevention)
+secrets.h
+config_local.h
+.env

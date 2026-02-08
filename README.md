@@ -21,7 +21,7 @@ Este proyecto utiliza un sistema de **Heartbeat (Latido)**. El ESP32 envía una 
 El proyecto se compone de snippets listos para usar en el **Arduino IDE**:
 
 ```text
-├── healthcheck_deep_sleep.ino   # Versión optimizada para batería (Deep Sleep)
+├── healthcheck_deep_sleep.ino   # Versión de máxima eficiencia energética y elegancia técnica
 ├── healthcheck_mvp.ino          # Versión básica (Siempre encendido)
 ├── LICENSE                      # Licencia MIT
 └── README.md                    # Documentación
@@ -35,7 +35,7 @@ El proyecto se compone de snippets listos para usar en el **Arduino IDE**:
   - Gestión inteligente de Serial para ahorrar energía.
 - **Doble Versión:** 
   - `MVP`: Fácil de probar y siempre online.
-  - `Deep Sleep`: Optimizada para larga duración con baterías.
+  - `Deep Sleep`: Una solución más elegante orientada a la eficiencia (reduce el consumo eléctrico a largo plazo).
 
 ## ⚙️ Configuración Rápida
 
@@ -48,7 +48,7 @@ const char* hc_url = "https://hc-ping.com/TU-UUID";
 ```
 
 > [!TIP]
-> **Optimización de IP:** Configura una IP estática en el código para asegurar una conexión casi instantánea y ahorrar batería en cada ciclo.
+> **Optimización de IP (Solo para Deep Sleep):** Configurar una IP estática en el código de la versión `deep_sleep` asegura una conexión casi instantánea tras despertar, ahorrando energía en cada ciclo y logrando una ejecución más limpia.
 
 ## 📦 Configuración en Healthchecks.io
 
